@@ -1,0 +1,4 @@
+#docker run -it --rm debian /bin/sh
+
+apt-get update -y && apt-get full-upgrade -y
+apt-get install build-essential gcc git vim -y
