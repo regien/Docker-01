@@ -1,20 +1,22 @@
-FROM	debian:9
+FROM golang
 
-RUN		apt-get update
-RUN		apt-get install -y curl openssh-server ca-certificates
-RUN		apt-get install -y postfix
+EXPOSE 3000
 
-RUN		DEBIAN_FRONTEND=noninteractive apt-get install postfix
+RUN adduser --disabled-login --gecos 'Gogs' git
 
-ENV		EXTERNAL_URL="localhost"
+RUN apt-get update && \
+	DEBIAN_FRONTEND=noninteractive apt-get install mysql-server -y && \
+	service mysql start && mysql -uroot -e "create database gogs"
 
-RUN		adduser --disabled-login --gecos 'Gitlab' git
+USER git
 
-RUN		curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
-RUN		sudo apt-get install -y gitlab-ce
+RUN mkdir -p $GOPATH/src/github.com/gogits && \
+	cd $GOPATH/src/github.com/gogits && \
+	git clone --depth=1 -b develop https://github.com/gogits/gogs && \
+	cd gogs && \
+	go build .
 
-RUN		echo "external url $(EXTERNAL_URL)" > /etc/gitlab/gitlab.rb
+USER root
 
-EXPOSE	2222 80
-
-CMD		gitlab-ctl reconfigure
+CMD     service mysql start && \
+        su git -c "$GOPATH/src/github.com/gogits/gogs/gogs web"
