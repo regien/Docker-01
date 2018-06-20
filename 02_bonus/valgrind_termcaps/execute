@@ -1,0 +1,2 @@
+docker build -t debug_42sh .
+docker run -it debug_42sh sh

@@ -3,8 +3,10 @@ FROM	debian:latest
 
 RUN		apt-get update -y && apt-get full-upgrade -y 
 RUN		apt-get install -y build-essential valgrind
-RUN		apt-get install libncurses-dev -y
+RUN		apt-get install -y git vim build-essential
+RUN		apt install libncurses5-dev libncursesw5-dev -y
 RUN		mkdir /root/testing
+COPY	.vimrc /root/
 
 WORKDIR	 /root/testing/
 
