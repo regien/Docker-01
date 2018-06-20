@@ -1,0 +1,4 @@
+You have to make a image called "minivalgrind:on-build"
+	running "docker build -t minivalgrind:on-build ."
+then you can execute the script inside the testing folder
+putting as an argument an only .c file
